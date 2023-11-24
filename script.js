@@ -9,7 +9,11 @@ function appendToDisplay(value) {
     return;
   }
 
-  display.value += value;
+  if (display.value === "Error") {
+    display.value = value;
+  } else {
+    display.value += value;
+  }
 }
 
 function clearDisplay() {
