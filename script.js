@@ -1,4 +1,5 @@
 let display = document.getElementById("display");
+let errorOccurred = false;
 
 function appendToDisplay(value) {
   const lastChar = display.value.slice(-1);
@@ -9,10 +10,12 @@ function appendToDisplay(value) {
     return;
   }
 
-  if (display.value === "Error") {
+  if (errorOccurred) {
     display.value = value;
+    errorOccurred = false;
   } else {
     display.value += value;
+    errorOccurred = false;
   }
 }
 
@@ -22,8 +25,11 @@ function clearDisplay() {
 
 function calculate() {
   try {
-    display.value = eval(display.value);
+    if (!errorOccurred) {
+      display.value = eval(display.value);
+    }
   } catch (error) {
     display.value = "Error";
+    errorOccurred = true;
   }
 }
