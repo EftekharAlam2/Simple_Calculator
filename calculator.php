@@ -1,3 +1,18 @@
+<?php
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['expression'])) {
+        $expression = $_POST['expression'];
+        try {
+            $result = eval("return $expression;");
+            echo json_encode(['result' => $result]);
+        } catch (Exception $e) {
+            echo json_encode(['error' => 'Error']);
+        }
+        exit;
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -29,6 +44,28 @@
         <button onclick="clearDisplay()">C</button>
       </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="script.js"></script>
+    <script>
+    function calculate() {
+        const expression = $('#display').val();
+        $.ajax({
+            url: 'calculator.php',
+            method: 'POST',
+            data: { expression: expression },
+            dataType: 'json',
+            success: function (response) {
+                if (response.error) {
+                    $('#display').val('Error');
+                } else {
+                    $('#display').val(response.result);
+                }
+            },
+            error: function () {
+                $('#display').val('Error');
+            }
+        });
+    }
+</script>
   </body>
 </html>
